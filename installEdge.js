@@ -8,6 +8,12 @@
 
 'use strict';
 
+// In a development environment, it's likely that certificate-based authentication
+// will not be used, so it is OK to let the nuget installation fail. This will 
+// happen when NuGet is not in the path. Override with the config setting 
+// failifnugetfails.
+let allowNuGetFailure = process.env.npm_package_config_failifnugetfails === "0";
+
 function jsonToNuGet(packages) {
   let xml = '<?xml version="1.0" encoding="utf-8"?>\n';
   xml += '<packages>\n';
@@ -44,12 +50,15 @@ try {
     return;
   }
 
-  const edgeVersion = pkg.scripts.edgePackageVersion;
+  const edgeVersion = process.env.npm_package_config_edgepackageversion;
+  if (!edgeVersion) {
+    return onError(new Error('No NPM config set for edgepackageversion'));
+  }
+
   const packageName = pkg.name;
   console.log(`Adding 'edge ${edgeVersion}' to package.json of '${packageName}'`);
 
   pkg.dependencies['edge'] = edgeVersion;
-  delete pkg.scripts.edgePackageVersion;
 
   if (__dirname.indexOf('node_modules') !== -1) {
     fs.writeFileSync(packagePath, JSON.stringify(pkg, undefined, 2));
@@ -73,7 +82,12 @@ try {
       cp.exec(nugetInstall, {
         cwd: __dirname
       }, function (err) {
-        if (err) return onError(err);
+        if (allowNuGetFailure && err) {
+          console.log('NuGet could not be found or had an installation problem.');
+          console.log('However the npm config variable failifnugetfails is set to not treat this as an error.');
+        } else if (err) {
+          return onError(err);
+        }
         process.exit(0);
       });
     });

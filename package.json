@@ -4,8 +4,11 @@
   "description": "tbd",
   "main": "index.js",
   "scripts": {
-    "postinstall": "node installEdge.js",
-    "edgePackageVersion": "5.9.2"
+    "postinstall": "node installEdge.js"
+  },
+  "config": {
+    "edgepackageversion": "5.9.2",
+    "failifnugetfails": "0"
   },
   "dependencies": {
     "async": "^2.0.1"
