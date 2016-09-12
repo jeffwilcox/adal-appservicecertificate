@@ -73,7 +73,7 @@ try {
         nugetExe = 'nuget';
         console.warn('nuget needs to be in the path or set in the NUGET_EXE environment variable');
       }
-      const nugetInstall = `${nugetExe} install ${nugetPackagesConfig} -OutputDirectory packages`;
+      const nugetInstall = `"${nugetExe}"" install ${nugetPackagesConfig} -OutputDirectory packages`;
       console.log('Installing NuGet packages: ' + Object.keys(nugetPackages).join(', '));
       cp.exec(nugetInstall, {
         cwd: path.resolve(__dirname, '../'),
