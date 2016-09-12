@@ -4,8 +4,8 @@
 'use strict';
 
 // In a development environment, it's likely that certificate-based authentication
-// will not be used, so it is OK to let the nuget installation fail. This will 
-// happen when NuGet is not in the path. Override with the config setting 
+// will not be used, so it is OK to let the nuget installation fail. This will
+// happen when NuGet is not in the path. Override with the config setting
 // failifnugetfails.
 let allowNuGetFailure = process.env.npm_package_config_failifnugetfails === "0";
 
@@ -62,12 +62,13 @@ try {
       cwd: __dirname
     }, function (err) {
       if (err) return onError(err);
-      
+
       const nugetPackages = require(path.resolve(__dirname, '..', 'src', 'nugetPackages.json'));
       const nugetPackagesConfig = path.resolve(__dirname, '..', 'src', 'packages.config');
       fs.writeFileSync(nugetPackagesConfig, jsonToNuGet(nugetPackages));
 
       let nugetExe = process.env.NUGET_EXE;
+      console.dir(process.env);
       if (!nugetExe) {
         nugetExe = 'nuget';
         console.warn('nuget needs to be in the path or set in the NUGET_EXE environment variable');
