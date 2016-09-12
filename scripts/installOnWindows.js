@@ -68,12 +68,12 @@ try {
       fs.writeFileSync(nugetPackagesConfig, jsonToNuGet(nugetPackages));
 
       let nugetExe = process.env.NUGET_EXE;
-      console.dir(process.env);
       if (!nugetExe) {
         nugetExe = 'nuget';
         console.warn('nuget needs to be in the path or set in the NUGET_EXE environment variable');
       }
-      const nugetInstall = `"${nugetExe}"" install ${nugetPackagesConfig} -OutputDirectory packages`;
+      console.log(nugetExe);
+      const nugetInstall = `"${nugetExe}" install ${nugetPackagesConfig} -OutputDirectory packages`;
       console.log('Installing NuGet packages: ' + Object.keys(nugetPackages).join(', '));
       cp.exec(nugetInstall, {
         cwd: path.resolve(__dirname, '../'),
@@ -81,6 +81,7 @@ try {
         if (allowNuGetFailure && err) {
           console.log('NuGet could not be found in the path or there was an installation problem');
           console.log('However the npm config variable failifnugetfails is 0');
+          console.dir(err);
         } else if (err) {
           return onError(err);
         }
