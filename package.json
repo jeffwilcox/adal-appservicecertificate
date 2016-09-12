@@ -2,9 +2,9 @@
   "name": "adal-node-appservicecertificate",
   "version": "0.0.1",
   "description": "tbd",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "postinstall": "node installEdge.js"
+    "postinstall": "node scripts/installOnWindows"
   },
   "config": {
     "edgepackageversion": "5.9.2",

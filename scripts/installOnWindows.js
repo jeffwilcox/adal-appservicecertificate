@@ -1,11 +1,6 @@
 // Copyright (c) Microsoft Corporation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
-// Windows-only edge install
-// Based on concepts used in 'spawn-sync' by forbeslindesay - MIT - [https://github.com/ForbesLindesay/spawn-sync/blob/master/postinstall.js]
-
-// TODO: Consider the NuGet part being a silent failure unless clearly in an App Service environment
-
 'use strict';
 
 // In a development environment, it's likely that certificate-based authentication
@@ -44,7 +39,7 @@ try {
     return;
   }
 
-  const packagePath = path.resolve(__dirname, 'package.json');
+  const packagePath = path.resolve(__dirname, '..', 'package.json');
   let pkg = require(packagePath);
   if (pkg.dependencies['edge']) {
     return;
@@ -68,8 +63,8 @@ try {
     }, function (err) {
       if (err) return onError(err);
       
-      const nugetPackages = require(path.resolve(__dirname, 'netfxPackages.json'));
-      const nugetPackagesConfig = path.resolve(__dirname, 'packages.config');
+      const nugetPackages = require(path.resolve(__dirname, '..', 'src', 'nugetPackages.json'));
+      const nugetPackagesConfig = path.resolve(__dirname, '..', 'src', 'packages.config');
       fs.writeFileSync(nugetPackagesConfig, jsonToNuGet(nugetPackages));
 
       let nugetExe = process.env.NUGET_EXE;
@@ -77,14 +72,14 @@ try {
         nugetExe = 'nuget';
         console.warn('nuget needs to be in the path or set in the NUGET_EXE environment variable');
       }
-      const nugetInstall = `${nugetExe} install ${nugetPackagesConfig}`;
-      console.log('Installing NuGet packages...');
+      const nugetInstall = `${nugetExe} install ${nugetPackagesConfig} -OutputDirectory packages`;
+      console.log('Installing NuGet packages: ' + Object.keys(nugetPackages).join(', '));
       cp.exec(nugetInstall, {
-        cwd: __dirname
+        cwd: path.resolve(__dirname, '../'),
       }, function (err) {
         if (allowNuGetFailure && err) {
-          console.log('NuGet could not be found or had an installation problem.');
-          console.log('However the npm config variable failifnugetfails is set to not treat this as an error.');
+          console.log('NuGet could not be found in the path or there was an installation problem');
+          console.log('However the npm config variable failifnugetfails is 0');
         } else if (err) {
           return onError(err);
         }

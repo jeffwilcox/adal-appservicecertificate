@@ -21,7 +21,7 @@ public class Interop
 
     public async Task<object> GetAuthenticationToken(dynamic input)
     {
-        CertificatesRepository certificates = new CertificatesRepository();    
+        CertificatesRepository certificates = new CertificatesRepository();
         bool allowTestCertificates = AuthenticationHelper.GetAllowTestCertificatesValue(input, true);
         string thumbprints = (string)input.thumbprints;
         string tenantId = (string)input.tenantId;
@@ -40,6 +40,12 @@ namespace AppService.CertificateServices
         public string AccessToken { get; private set; }
         public string AccessTokenType { get; private set; }
         public DateTimeOffset ExpiresOn { get; private set; }
+        public int ExpiresIn {
+            get {
+                TimeSpan remaining = DateTimeOffset.UtcNow - ExpiresOn;
+                return (int) remaining.TotalSeconds;
+            }
+        }
 
         public LightweightAuthenticationResult(AuthenticationResult result)
         {
@@ -71,7 +77,7 @@ namespace AppService.CertificateServices
             var cert = certificates.GetBestValidByThumbprints(thumbprints, allowTestCertificates);
             if (cert == null)
             {
-                throw new InvalidOperationException("The certificate is not available.");
+                throw new InvalidOperationException("No certificates are available matching thumbprint(s): " + thumbprints);
             }
 
             ClientAssertionCertificate certCred = new ClientAssertionCertificate(clientId, cert);
@@ -126,7 +132,7 @@ namespace AppService.CertificateServices
                 throw new ArgumentException("At least one thumbprint must be provided.", "thumbprints");
             }
 
-            // remove : from thumbprints - openssl by default outputs the separators
+            // remove any ":" from thumbprints - openssl by default outputs separators
             var prints = thumbprints.Replace(":", "").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             bool validateCertificates = !allowTestCertificates;
