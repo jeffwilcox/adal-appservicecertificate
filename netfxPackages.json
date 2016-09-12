@@ -1,0 +1,4 @@
+{
+  "Microsoft.IdentityModel.Clients.ActiveDirectory": "3.13.4",
+  "Newtonsoft.Json": "9.0.1"
+}
