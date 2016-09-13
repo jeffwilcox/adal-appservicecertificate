@@ -189,16 +189,19 @@ namespace AppService.CertificateServices
         }
     }
 
+    // This class uses non-standard [for .NET] camelCase property casing
+    // to quickly make the resulting interop values look more native.
+
     public class Certificate
     {
-        public bool HasPrivateKey { get; private set; }
-        public string Issuer { get; private set; }
-        public DateTime NotBefore { get; private set; }
-        public DateTime NotAfter { get; private set; }
-        public string Subject { get; private set; }
-        public string Thumbprint { get; private set; }
+        public bool hasPrivateKey { get; private set; }
+        public string issuer { get; private set; }
+        public DateTime notBefore { get; private set; }
+        public DateTime notAfter { get; private set; }
+        public string subject { get; private set; }
+        public string thumbprint { get; private set; }
 
-        public int DaysUntilExpiration
+        public int daysUntilExpiration
         {
             get
             {
@@ -211,12 +214,12 @@ namespace AppService.CertificateServices
         {
             return new Certificate
             {
-                HasPrivateKey = cert.HasPrivateKey,
-                Issuer = cert.Issuer,
-                NotAfter = cert.NotAfter,
-                NotBefore = cert.NotBefore,
-                Subject = cert.Subject,
-                Thumbprint = cert.Thumbprint,
+                hasPrivateKey = cert.HasPrivateKey,
+                issuer = cert.Issuer,
+                notAfter = cert.NotAfter,
+                notBefore = cert.NotBefore,
+                subject = cert.Subject,
+                thumbprint = cert.Thumbprint,
             };
         }
     }
