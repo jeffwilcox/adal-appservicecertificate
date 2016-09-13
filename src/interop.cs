@@ -37,9 +37,11 @@ namespace AppService.CertificateServices
 {
     public class LightweightAuthenticationResult
     {
+        private DateTimeOffset expiresOn;
+
         public string AccessToken { get; private set; }
         public string AccessTokenType { get; private set; }
-        public DateTimeOffset ExpiresOn { get; private set; }
+        public DateTime ExpiresOn { get; private set; }
         public int ExpiresIn {
             get {
                 TimeSpan remaining = ExpiresOn - DateTimeOffset.UtcNow;
@@ -51,7 +53,8 @@ namespace AppService.CertificateServices
         {
             AccessToken = result.AccessToken;
             AccessTokenType = result.AccessTokenType;
-            ExpiresOn = result.ExpiresOn;
+            expiresOn = result.ExpiresOn;
+            ExpiresOn = expiresOn.UtcDateTime;
         }
     }
 
