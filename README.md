@@ -306,6 +306,7 @@ function createKeyVaultClient(config, callback) {
   const credentials = new azureKeyVault.KeyVaultCredentials(authenticator);
   const keyVaultClient = new azureKeyVault.KeyVaultClient(credentials);
   callback(null, keyVaultClient);
+}
 ```
 
 For local development, consider having an independent KeyVault, AAD application,
