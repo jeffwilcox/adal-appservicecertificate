@@ -266,7 +266,52 @@ associated with my app and also have set `WEBSITE_LOAD_CERTIFICATES` to `*`.
 
 #### Selecting the appropriate method for tokens
 
-> TODO: Implement sample code
+This sample creates a new KeyVault client which either uses an available,
+configured/defined certificate thumbprint _or_ falls back to requiring a
+client secret.
+
+```javascript
+'use strict';
+
+const adal = require('adal-node');
+const adalAppServiceCertificate = require('adal-appservicecertificate');
+adalAppServiceCertificate.addAppServiceCertificateSupport(adal);
+
+const config = {
+  id: process.env.AAD_CLIENT_ID,
+  thumbprint: process.env.AAD_CLIENT_CERTIFICATE_THUMBPRINT,
+  secret: process.env.AAD_CLIENT_SECRET,
+}
+
+function createKeyVaultClient(config, callback) {
+  const clientId = config.id;
+  const clientSecret = config.secret;
+  const clientThumbprint = config.thumbprint;
+  if (!clientSecret && !clientThumbprint) {
+    return callback(new Error('A certificate thumbprint or a secret must be provided for KeyVault.'));
+  }
+  const authenticator = (challenge, authCallback) => {
+    const context = new adalNode.AuthenticationContext(challenge.authorization);
+    const authenticationHandler = (tokenAcquisitionError, tokenResponse) => {
+      if (tokenAcquisitionError) {
+        return authCallback(tokenAcquisitionError);
+      }
+      const authorizationValue = `${tokenResponse.tokenType} ${tokenResponse.accessToken}`;
+      return authCallback(null, authorizationValue);
+    }
+    return clientThumbprint ?
+      context.acquireTokenWithAppServiceCertificate(challenge.resource, clientId, thumbprints, authenticationHandler) :
+      context.acquireTokenWithClientCredentials(challenge.resource, clientId, clientSecret, authenticationHandler);
+  };
+  const credentials = new azureKeyVault.KeyVaultCredentials(authenticator);
+  const keyVaultClient = new azureKeyVault.KeyVaultClient(credentials);
+  callback(null, keyVaultClient);
+```
+
+For local development, consider having an independent KeyVault, AAD application,
+and unique client ID and secret for the app authorized; then, in production, a
+different vault, application, and the app itself should not have a secret
+generated, but instead a certificate set with the AAD app.
 
 ## Notes
 
