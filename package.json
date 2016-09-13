@@ -1,10 +1,22 @@
 {
-  "name": "adal-node-appservicecertificate",
-  "version": "0.0.1",
-  "description": "tbd",
+  "name": "adal-appservicecertificate",
+  "version": "0.0.2",
+  "description": "A Node.js helper library for Azure Active Directory server-to-server communication using Azure App Service and certificate-based authentication.",
   "main": "lib/index.js",
+  "keywords": [
+    "authentication",
+    "certificate",
+    "app service",
+    "azure active directory",
+    "azure app service",
+    "keyvault"
+  ],
   "scripts": {
-    "postinstall": "node scripts/installOnWindows"
+    "postinstall": "node scripts/installOnWindows",
+    "test": "eslint ."
+  },
+  "engines": {
+    "node": "~4.4.1"
   },
   "config": {
     "edgepackageversion": "5.9.2",
@@ -13,6 +25,15 @@
   "dependencies": {
     "async": "^2.0.1"
   },
-  "author": "Jeff Wilcox",
-  "license": "MIT"
+  "author": "Microsoft",
+  "license": "MIT",
+  "contributors": [
+    "Jeff Wilcox <jwilcox@microsoft.com>"
+  ],
+  "devDependencies": {
+    "eslint": "^3.1.1"
+  },
+  "peerDependencies": {
+    "adal-node": "^0.1.22"
+  }
 }

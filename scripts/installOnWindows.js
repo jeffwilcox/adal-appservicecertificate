@@ -3,11 +3,13 @@
 
 'use strict';
 
+/*eslint no-console: ["error", { allow: ["warn", "log", "info", "error"] }] */
+
 // In a development environment, it's likely that certificate-based authentication
 // will not be used, so it is OK to let the nuget installation fail. This will
 // happen when NuGet is not in the path. Override with the config setting
 // failifnugetfails.
-let allowNuGetFailure = process.env.npm_package_config_failifnugetfails === "0";
+let allowNuGetFailure = process.env.npm_package_config_failifnugetfails === '0';
 
 const allowedMinutes = 10;
 
@@ -27,6 +29,7 @@ function onError(err) {
     require('fs').writeFileSync(__dirname + '/error.log', str);
     console.error(str);
   } catch (ex) {
+    /* ignore */
   }
   process.exit(1);
 }
@@ -88,7 +91,7 @@ try {
           return onError(err);
         }
         const hrend = process.hrtime(hrstart);
-        console.info("Edge + NuGet installation time (hr): %ds %dms", hrend[0], hrend[1]/1000000);
+        console.info('Edge + NuGet installation time: %ds %dms', hrend[0], hrend[1]/1000000);
         process.exit(0);
       });
     });
