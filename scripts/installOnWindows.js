@@ -9,6 +9,8 @@
 // failifnugetfails.
 let allowNuGetFailure = process.env.npm_package_config_failifnugetfails === "0";
 
+const allowedMinutes = 10;
+
 function jsonToNuGet(packages) {
   let xml = '<?xml version="1.0" encoding="utf-8"?>\n';
   xml += '<packages>\n';
@@ -91,11 +93,10 @@ try {
       });
     });
 
-    // 5 minute timeout on installation
     setTimeout(function () {
-      console.error('Installation timed out');
+      console.error('Installation timed out after an allowed ' + allowedMinutes + ' minutes');
       process.exit(1);
-    }, 60 * 5 * 1000);
+    }, 60 * 1000 * allowedMinutes);
   }
 } catch (ex) {
   onError(ex);
