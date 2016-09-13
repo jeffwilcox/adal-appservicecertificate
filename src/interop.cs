@@ -42,7 +42,7 @@ namespace AppService.CertificateServices
         public DateTimeOffset ExpiresOn { get; private set; }
         public int ExpiresIn {
             get {
-                TimeSpan remaining = DateTimeOffset.UtcNow - ExpiresOn;
+                TimeSpan remaining = ExpiresOn - DateTimeOffset.UtcNow;
                 return (int) remaining.TotalSeconds;
             }
         }
