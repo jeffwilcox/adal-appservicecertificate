@@ -205,7 +205,7 @@ namespace AppService.CertificateServices
         {
             get
             {
-                TimeSpan difference = NotAfter.Subtract(DateTime.UtcNow);
+                TimeSpan difference = notAfter.Subtract(DateTime.UtcNow);
                 return (int)Math.Floor(difference.TotalDays);
             }
         }
