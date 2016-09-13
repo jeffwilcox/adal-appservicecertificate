@@ -176,7 +176,7 @@ the tenant, client ID, etc.
 const authorityHostUrl = 'https://login.windows.net';
 const tenant = process.env.AAD_TENANT_ID; // 'your-tenant-id';
 const clientId = process.env.AAD_CLIENT_ID; // 'your Azure Application Directory client ID for the app';
-const thumbprints = process.env.WEBSITE_LOAD_CERTIFICATES; // '...FBF286C04... your cert thumbprint(s) here';
+const thumbprints = process.env.process.env.AAD_CLIENT_CERTIFICATE_THUMBPRINT ||  process.env.WEBSITE_LOAD_CERTIFICATES; // '...FBF286C04... your cert thumbprint(s) here';
 
 const resource = 'https://vault.azure.net'; // KeyVault authorization
 const authorityUrl = `${authorityHostUrl}/${tenant}`;
