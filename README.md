@@ -156,7 +156,7 @@ authentication story with AAD for any KeyVault operations.
 
 Do this at the top of any file where you are going to need to auth with certs.
 
-```
+```javascript
 'use strict';
 
 const adal = require('adal-node');
@@ -172,7 +172,7 @@ Using the configuration environment for your app (either files or Application
 Settings within an Azure App Service), store the non-secrets for your app:
 the tenant, client ID, etc.
 
-```
+```javascript
 const authorityHostUrl = 'https://login.windows.net';
 const tenant = process.env.AAD_TENANT_ID; // 'your-tenant-id';
 const clientId = process.env.AAD_CLIENT_ID; // 'your Azure Application Directory client ID for the app';
@@ -190,7 +190,7 @@ context.acquireTokenWithAppServiceCertificate(resource, clientId, thumbprints, (
 The token result object looks very much like any other ADAL node library
 result:
 
-```
+```json
 {
   "accessToken": "...eyJ0eXAiOiJKV1QiLCJhbGciOi...",
   "expiresIn": 3598,
@@ -216,7 +216,7 @@ will have problems as only one cert will be used for auth.
 Ideally you would not just pipe this back to a user, but here is a sample
 Express route that would do just that...
 
-```
+```javascript
 router.get('/certs', function (req, res, next) {
   // Authenticate this endpoint to your ops admins if you ship it
   // Only use this for debugging or learning about the APIs
@@ -230,7 +230,7 @@ router.get('/certs', function (req, res, next) {
 And the output will look similar to this, assuming I have these 3 certificates
 associated with my app and also have set `WEBSITE_LOAD_CERTIFICATES` to `*`.
 
-```
+```json
 [
   {
     "hasPrivateKey": true,
